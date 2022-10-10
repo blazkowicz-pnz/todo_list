@@ -8,12 +8,12 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=on \
 
 RUN groupadd --system service && useradd --system -g service api
 
-COPY requirements.txt .
+COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
-COPY todo_list ./
-COPY core ./
-COPY entrypoint.sh ./
-COPY manage.py ./
+COPY todo_list ./todo_list
+COPY core ./core
+COPY entrypoint.sh ./entrypoint.sh
+COPY manage.py ./manage.py
 
 USER api
 
