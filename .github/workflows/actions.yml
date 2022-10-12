@@ -65,5 +65,7 @@ jobs:
           script: |
             docker compose pull
             docker compose up -d
+            ls -a
+            
           
 
