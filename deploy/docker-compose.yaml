@@ -18,7 +18,7 @@ services:
       retries: 3
 
   api:
-    image: ibelousov39/todo_list:latest
+    image: ${DOCKERHUB_USERNAME}/todo_list:latest
     restart: always
     env_file:
       - ./.env
