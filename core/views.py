@@ -13,14 +13,16 @@ class SignupView(generics.CreateAPIView):
 class LoginView(generics.CreateAPIView):
     serializer_class = LoginSerializer
 
-    def perform_create(self, serializer):
-        login(request=self.request, user=serializer.save())
+    # def perform_create(self, serializer):
+    #     login(request=self.request, user=serializer.save())
+    #
 
-    # def post(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     login(request=request, user=serializer.save())
-    #     return Response(serializer.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        login(request=request, user=user)
+        return Response(ProfileSerializer(user).data)
 
 
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
