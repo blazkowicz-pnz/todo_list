@@ -40,8 +40,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        # Обратиьт внимание на поля
-        fields = ("username","password")
+        fields = ("username", "password")
 
     def create(self, validated_data: dict):
         if not (user := authenticate(
@@ -70,12 +69,12 @@ class UpdatePasswordSerializer(serializers.Serializer):
             raise ValidationError({"old password": "field is incorrect"})
         return attrs
 
-    def create(self, validated_data: dict):
+    def create(self, validated_data: dict) -> User:
         raise NotImplementedError
 
-    def update(self, instance: User, validated_data: dict):
+    def update(self, instance: User, validated_data: dict) -> User:
         instance.password = make_password(validated_data["new_password"])
-        instance.save(update_fields=("password", ))
+        instance.save(update_fields=("password",))
         return instance
 
 
