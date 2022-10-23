@@ -1,4 +1,5 @@
 from django.db import models
+
 from core.models import User
 
 
@@ -95,6 +96,33 @@ class Goal(BaseModel):
         on_delete=models.PROTECT
     )
 
+    def __str__(self):
+        return self.title
+
+
+class GoalComment(BaseModel):
+    user = models.ForeignKey(
+        User,
+        verbose_name="Автор",
+        on_delete=models.PROTECT,
+        related_name="comments"
+    )
+    goal = models.ForeignKey(
+        Goal,
+        verbose_name="Цель",
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+    text = models.TextField(
+        verbose_name="Текст",
+    )
+
+    class Meta:
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+
+    def __str__(self):
+        return self.text
 
 
 

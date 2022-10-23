@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   postgres:
-    image: postgres:13.0-alpine
+    image: postgres:13-alpine
     restart: on-failure
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
