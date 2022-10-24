@@ -12,6 +12,7 @@ COPY requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt
 COPY todo_list ./todo_list
 COPY core ./core
+COPY goals ./goals
 COPY entrypoint.sh ./entrypoint.sh
 COPY manage.py ./manage.py
 
