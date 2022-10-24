@@ -114,7 +114,7 @@ class GoalComment(BaseModel):
         related_name="comments"
     )
     text = models.TextField(
-        verbose_name="Текст",
+        verbose_name="Текст"
     )
 
     class Meta:

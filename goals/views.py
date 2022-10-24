@@ -42,10 +42,8 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
         return GoalCategory.objects.filter(user=self.request.user, is_deleted=False)
 
     def perform_destroy(self, instance: GoalCategory):
-        # удалить связанные цели
         instance.is_deleted = True
         instance.save(update_fields=("is_deleted",))
-
         return instance
 
 
@@ -58,9 +56,8 @@ class GoalListView(generics.ListAPIView):
     model = Goal
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = GoalSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filterset_class = GoalDateFilter
-
-    filter_backends = [OrderingFilter, SearchFilter]
     ordering_fields = ["title", "created"]
     ordering = ["title"]
     search_fields = ["title", "description"]
