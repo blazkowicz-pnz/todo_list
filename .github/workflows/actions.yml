@@ -49,6 +49,7 @@ jobs:
           mv static deploy/static -f
 
       - name: Copy on server
+        run: mv todo_list/static deploy/static -R
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
