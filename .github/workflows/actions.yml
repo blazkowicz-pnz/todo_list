@@ -46,7 +46,6 @@ jobs:
         run: |
           envsubst '$DOCKERHUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
           mv deploy/tmp.docker-compose.yaml deploy/docker-compose.yaml
-
       - name: Copy on server
         uses: appleboy/scp-action@master
         with:
@@ -56,7 +55,6 @@ jobs:
           source: "deploy/*"
           target: todolist
           strip_components: 1
-#
       - name: Run compose
         uses: appleboy/ssh-action@master
         with:
