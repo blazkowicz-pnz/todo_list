@@ -48,7 +48,7 @@ jobs:
           envsubst '$DOCKERHUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
           mv deploy/tmp.docker-compose.yaml deploy/docker-compose.yaml
       - name: Copy static
-        run: mv todo_list/static deploy/static -R
+        run: mv todo_list/static deploy/static
       - name: Copy on server
         uses: appleboy/scp-action@master
         with:
