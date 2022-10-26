@@ -44,10 +44,10 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          docker system prune -a -f
           envsubst '$DOCKERHUB_USERNAME' < deploy/docker-compose.yaml > deploy/tmp.docker-compose.yaml
           mv deploy/tmp.docker-compose.yaml deploy/docker-compose.yaml
           mv static deploy/static -f
+          docker system prune -a -f
       - name: Copy on server
         uses: appleboy/scp-action@master
         with:
