@@ -85,7 +85,6 @@ class GoalCategory(BaseModel):
         related_name="categories"
 
     )
-
     def __str__(self):
         return self.title
 
