@@ -6,20 +6,11 @@ from rest_framework import generics, permissions
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from goals.filters import GoalDateFilter
-from goals.models import GoalCategory, Goal, GoalComment
+from goals.models import GoalCategory, Goal, GoalComment, Board
 from goals.serializers import GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCreateSerializer, \
-    GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer
+    GoalSerializer, GoalCommentCreateSerializer, GoalCommentSerializer, BoardCreateSerializer, BoardSerializer, BoardListSerializer
 
-from goals.permissions import BoardPermission
-from goals.serializers import BoardCreateSerializer
-
-from goals.models import Board
-
-from goals.serializers import BoardSerializer
-
-from goals.serializers import BoardListSerializer
-
-from goals.permissions import GoalCategoryPermissions, GoalPermissions, CommentPermissions, IsOwnerOrReadOnly
+from goals.permissions import GoalCategoryPermissions, GoalPermissions, CommentPermissions, IsOwnerOrReadOnly, BoardPermission
 
 
 class BoardCreateView(generics.CreateAPIView):
@@ -52,7 +43,8 @@ class BoardView(generics.RetrieveUpdateDestroyAPIView):
             instance.save(update_fields=("is_deleted",))
             instance.categories.update(is_deleted=True)
             Goal.objects.filter(category__board=instance).update(
-                status=Goal.Status.archived)
+                status=Goal.Status.archived
+            )
         return instance
 
 
@@ -66,7 +58,6 @@ class GoalCategoryListView(generics.ListAPIView):
     model = GoalCategory
     permission_classes = [GoalCategoryPermissions]
     serializer_class = GoalCategorySerializer
-
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filterset_fields = ["board"]
     ordering_fields = ["title", "created"]
@@ -90,6 +81,7 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
             board__participants__user_id=self.request.user.id,
             is_deleted=False
         )
+
     def perform_destroy(self, instance: GoalCategory):
         with transaction.atomic():
             instance.is_deleted = True

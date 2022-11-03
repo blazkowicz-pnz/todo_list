@@ -1,14 +1,9 @@
 from typing import Type
-
 from django.db import transaction
 from rest_framework import serializers
-
 from rest_framework.exceptions import PermissionDenied
-
 from core.serializers import ProfileSerializer
-from goals.models import GoalCategory, Goal, GoalComment
-from goals.models import BoardParticipant, Board
-
+from goals.models import GoalCategory, Goal, GoalComment, BoardParticipant, Board
 from core.models import User
 
 
@@ -65,12 +60,9 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             board_id=value.board.id,
             role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
             user=self.context["request"].user,
-        ).exist():
+        ).exists():
             raise PermissionDenied
 
-
-        # if self.instance.category.board_id != value.board_id:
-        #     raise serializers.ValidationError("Transfer between projects not allowed")
         return value
 
 
@@ -78,6 +70,7 @@ class GoalSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
         queryset=GoalCategory.objects.filter(is_deleted=False)
     )
+
     class Meta:
         model = Goal
         fields = "__all__"
@@ -98,7 +91,6 @@ class GoalCommentCreateSerializer(serializers.ModelSerializer):
         model = GoalComment
         fields = "__all__"
         read_only_fields = ("id", "created", "updated", "user")
-
 
 
 class GoalCommentSerializer(serializers.ModelSerializer):
@@ -174,8 +166,8 @@ class BoardSerializer(serializers.ModelSerializer):
         return instance
 
 
-
 class BoardListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Board
         fields = "__all__"
