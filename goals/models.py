@@ -46,6 +46,7 @@ class BoardParticipant(BaseModel):
         verbose_name="Доска",
         on_delete=models.PROTECT,
         related_name="participants",
+
     )
     user = models.ForeignKey(
         User,
