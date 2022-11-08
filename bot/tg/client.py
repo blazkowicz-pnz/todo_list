@@ -1,11 +1,14 @@
-from todo_list.bot.tg.models import GetUpdateResponse, SendMessageResponse
+from bot.tg.models import SendMessageResponse
 import requests
+
+from bot.tg.models import GetUpdateResponse
+
 
 class TgClient:
     def __init__(self, token: str):
         self.token = token
 
-    def get_url(self, method:str) -> str:
+    def get_url(self, method: str) -> str:
         return f"https://api.telegram.org/bot{self.token}/{method}"
 
     def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdateResponse:
@@ -15,5 +18,5 @@ class TgClient:
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         url = self.get_url("sendMessage")
-        response = requests.post(url, json={"chat_id": chat_id, "text":text})
+        response = requests.post(url, json={"chat_id": chat_id, "text": text})
         return SendMessageResponse(**response.json())

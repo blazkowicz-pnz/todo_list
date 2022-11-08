@@ -1,10 +1,10 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 
-from todo_list.bot.models import TgUser
-from todo_list.bot.serializers import TgUserSerializer
-from todo_list.bot.tg.client import TgClient
-from todo_list.todo_list import settings
+from bot.models import TgUser
+from bot.serializers import TgUserSerializer
+from bot.tg.client import TgClient
+from todo_list import settings
 
 
 class VerificationView(generics.GenericAPIView):

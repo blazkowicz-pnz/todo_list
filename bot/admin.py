@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from todo_list.bot.models import TgUser
+from bot.models import TgUser
 
 
 @admin.register(TgUser)

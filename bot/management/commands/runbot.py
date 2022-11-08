@@ -1,11 +1,11 @@
-import os
-
+from os import urandom
 from django.core.management import BaseCommand
 
-from todo_list.bot.models import TgUser
-from todo_list.bot.tg.client import TgClient
-from todo_list.bot.tg.models import Message
-from todo_list.todo_list import settings
+from bot.models import TgUser
+from bot.tg.client import TgClient
+
+from todo_list import settings
+from bot.tg.models import Message
 
 
 class Command(BaseCommand):
@@ -14,8 +14,8 @@ class Command(BaseCommand):
         self.tg_client = TgClient(settings.BOT_TOKEN)
 
     @staticmethod
-    def _generate_verification_code()->str:
-        return os.random(12).hex()
+    def _generate_verification_code() -> str:
+        return urandom(12).hex()
 
     def handle_unverified_user(self, msg: Message, tg_user: TgUser):
         code: str = self._generate_verification_code()
@@ -38,7 +38,6 @@ class Command(BaseCommand):
         else:
             self.handle_unverified_user(msg=msg, tg_user=tg_user)
 
-
     def handle(self, *args, **options):
         offset = 0
         while True:
@@ -47,4 +46,3 @@ class Command(BaseCommand):
                 offset = item.update_id + 1
                 self.handle_message(msg=item.message)
                 self.tg_client.send_message(chat_id=item.message.chat.id, text=item.message.text)
-

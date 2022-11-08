@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from todo_list.bot.models import TgUser
+from bot.models import TgUser
 
 
 class TgUserSerializer(serializers.ModelSerializer):
