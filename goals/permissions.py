@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from rest_framework.permissions import IsAuthenticated
+
 
 from goals.models import BoardParticipant, Goal, GoalCategory, Board, GoalComment
 
@@ -12,7 +12,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user_id == request.user.id
 
 
-class BoardPermission(IsAuthenticated):
+class BoardPermission(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj: Board):
         filters: dict = {"user": request.user, "board": obj}
         if request.method not in permissions.SAFE_METHODS:
@@ -21,7 +21,7 @@ class BoardPermission(IsAuthenticated):
         return BoardParticipant.objects.filter(**filters).exists()
 
 
-class GoalCategoryPermissions(IsAuthenticated):
+class GoalCategoryPermissions(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj: GoalCategory):
         filters: dict = {"user": request.user, "board": obj.board}
         if request.method not in permissions.SAFE_METHODS:
@@ -30,7 +30,7 @@ class GoalCategoryPermissions(IsAuthenticated):
         return BoardParticipant.objects.filter(**filters).exists()
 
 
-class GoalPermissions(IsAuthenticated):
+class GoalPermissions(permissions.IsAuthenticated):
 
     def has_object_permission(self, request, view, obj: Goal):
         filters: dict = {"user": request.user, "board": obj.category.board}
@@ -40,7 +40,7 @@ class GoalPermissions(IsAuthenticated):
         return BoardParticipant.objects.filter(**filters).exists()
 
 
-class CommentPermissions(IsAuthenticated):
+class CommentPermissions(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj: GoalComment):
         return any((
                 request.method in permissions.SAFE_METHODS,

@@ -90,6 +90,7 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
             board__participants__user_id=self.request.user.id,
             is_deleted=False
         )
+
     def perform_destroy(self, instance: GoalCategory):
         with transaction.atomic():
             instance.is_deleted = True
@@ -133,6 +134,7 @@ class GoalView(generics.RetrieveUpdateDestroyAPIView):
         instance.status = Goal.Status.archived
         instance.save(update_fields=("status",))
         return instance
+
 
 class GoalCommentCreateView(generics.CreateAPIView):
     permission_classes = [CommentPermissions]

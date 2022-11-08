@@ -65,7 +65,7 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             board_id=value.board.id,
             role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
             user=self.context["request"].user,
-        ).exist():
+        ).exists():
             raise PermissionDenied
 
 
