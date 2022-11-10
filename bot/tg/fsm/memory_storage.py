@@ -4,7 +4,7 @@ from enum import Enum
 
 
 class StorageData(BaseModel):
-    state: Enum or None = None
+    state: Enum | None = None
     data: dict = {}
 
 
@@ -18,7 +18,7 @@ class MemoryStorage(Storage):
             self.data[chat_id] = StorageData()
         return self.data[chat_id]
 
-    def get_state(self, chat_id: int) -> StorageData or None:
+    def get_state(self, chat_id: int) -> StorageData | None:
         return self._resolve_chat(chat_id).state
 
     def get_data(self, chat_id: int) -> dict:
@@ -36,9 +36,12 @@ class MemoryStorage(Storage):
     def reset_data(self, chat_id: int) -> None:
         self._resolve_chat(chat_id).data.clear()
 
-    def reset(self, chat_id: int) -> None:
+    def reset(self, chat_id: int) -> bool:
         return bool(self.data.pop(chat_id, None))
 
     def update_data(self, chat_id: int, **kwargs) -> None:
         self._resolve_chat(chat_id).data.update(**kwargs)
+
+    def get_all_data(self, chat_id: int) -> StorageData:
+        return self._resolve_chat(chat_id)
 

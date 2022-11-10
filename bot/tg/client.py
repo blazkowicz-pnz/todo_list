@@ -1,5 +1,5 @@
 import requests
-from bot.tg.models import GetUpdateResponse, SendMessageResponse
+from bot.tg.models import GetUpdatesResponse, SendMessageResponse
 
 
 class TgClient:
@@ -9,10 +9,10 @@ class TgClient:
     def get_url(self, method: str) -> str:
         return f"https://api.telegram.org/bot{self.token}/{method}"
 
-    def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdateResponse:
+    def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
         url = self.get_url("getUpdates")
         response = requests.get(url, params={"offset": offset, "timeout": timeout})
-        return GetUpdateResponse(**response.json())
+        return GetUpdatesResponse(**response.json())
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         url = self.get_url("sendMessage")

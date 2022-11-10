@@ -5,7 +5,7 @@ from enum import Enum
 class Storage(ABC):
 
     @abstractmethod
-    def get_state(self, chat_id: int)-> Enum | None:
+    def get_state(self, chat_id: int) -> Enum | None:
         raise NotImplemented
 
     @abstractmethod
@@ -17,8 +17,8 @@ class Storage(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set_data(self, chat_id: int) -> None:
-        raise
+    def set_data(self, chat_id: int, data: dict) -> None:
+        raise NotImplementedError
 
     @abstractmethod
     def reset_state(self, chat_id: int) -> None:

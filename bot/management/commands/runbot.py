@@ -12,18 +12,23 @@ from pydantic import BaseModel
 
 from todo_list import settings
 from bot.tg.fsm.memory_storage import MemoryStorage
-
+# from bot.fsm.memory_storage import MemoryStorage
 from goals.models import Goal, GoalCategory, BoardParticipant
 
 logger = logging.getLogger(__name__)
 
+
 class NewGoal(BaseModel):
-    chat_id: int or None = None
-    goal_title: str or None = None
+    chat_id: int | None = None
+    goal_title: str | None = None
 
     @property
-    def is_completed(self):
-        return None not in [self.chat_id, self.goal_title]
+    def is_completed(self) -> bool:
+        if None in [self.chat_id, self.goal_title]:
+            return False
+
+        # return None not in [self.chat_id, self.goal_title]
+
 
 class StateEnum(IntEnum):
     CREATE_CATEGORY_SELECT = auto()
@@ -38,7 +43,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def _generate_verification_code() -> str:
-        return os.random(12).hex()
+        return os.urandom(12).hex()
 
     def handle_unverified_user(self, msg: Message, tg_user: TgUser):
         code: str = self._generate_verification_code()
@@ -68,7 +73,7 @@ class Command(BaseCommand):
             )
         ]
         if resp_categories:
-            self.tg_client.send_message(msg.chat.id, "Select category" + "\n".join(resp_categories))
+            self.tg_client.send_message(msg.chat.id, "Select category\n" + "\n".join(resp_categories))
         else:
             self.tg_client.send_message(msg.chat.id, "[you have no categories]")
 
@@ -76,10 +81,9 @@ class Command(BaseCommand):
         if msg.text.isdigit():
             cat_id = int(msg.text)
             if GoalCategory.objects.filter(
-                board__participant__user_id=tg_user.user_id,
-                board_participant__user_id=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-                is_deleted=False,
-                id=cat_id
+                    board__participants__user_id=tg_user.user_id,
+                    is_deleted=False,
+                    id=cat_id
             ).exists():
                 self.storage.update_data(chat_id=msg.chat.id, cat_id=cat_id)
                 self.tg_client.send_message(msg.chat.id, "[set title]")
@@ -101,11 +105,11 @@ class Command(BaseCommand):
             )
             self.tg_client.send_message(msg.chat.id, "[New goal created]")
         else:
-            self.tg_client.send_message(msg.chat.id, "[something went wrong]")
+            print(goal.goal_title, goal.chat_id)
+            logger.error("fucking error!!!!")
+            # self.tg_client.send_message(msg.chat.id, "[something went wrong]")
 
         self.storage.reset(tg_user.chat_id)
-
-
 
     def handle_verified_user(self, msg: Message, tg_user: TgUser):
         if msg.text == "/goals":
@@ -124,13 +128,12 @@ class Command(BaseCommand):
                 case StateEnum.CREATE_CATEGORY_SELECT:
                     self.handle_save_selected_category(msg, tg_user)
                 case StateEnum.CHOSEN_CATEGORY:
-                    ...
+                    self.handle_save_new_cat(msg, tg_user)
                 case _:
                     logger.warning("Invalid state %s", state)
 
         elif msg.text.startswith("/"):
             self.tg_client.send_message(msg.chat.id, "[unknown command]")
-
 
     def handle_message(self, msg: Message):
         tg_user, _ = TgUser.objects.select_related("user").get_or_create(
@@ -151,4 +154,3 @@ class Command(BaseCommand):
             for item in res.result:
                 offset = item.update_id + 1
                 self.handle_message(msg=item.message)
-                self.tg_client.send_message(chat_id=item.message.chat.id, text=item.message.text)
