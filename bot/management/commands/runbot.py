@@ -19,15 +19,12 @@ logger = logging.getLogger(__name__)
 
 
 class NewGoal(BaseModel):
-    chat_id: int | None = None
+    cat_id: int | None
     goal_title: str | None = None
 
     @property
     def is_completed(self) -> bool:
-        if None in [self.chat_id, self.goal_title]:
-            return False
-
-        # return None not in [self.chat_id, self.goal_title]
+        return None not in [self.cat_id, self.goal_title]
 
 
 class StateEnum(IntEnum):
@@ -105,9 +102,7 @@ class Command(BaseCommand):
             )
             self.tg_client.send_message(msg.chat.id, "[New goal created]")
         else:
-            print(goal.goal_title, goal.chat_id)
-            logger.error("fucking error!!!!")
-            # self.tg_client.send_message(msg.chat.id, "[something went wrong]")
+            self.tg_client.send_message(msg.chat.id, "[something went wrong]")
 
         self.storage.reset(tg_user.chat_id)
 
