@@ -3,7 +3,8 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import PermissionDenied
 from core.serializers import ProfileSerializer
-from goals.models import GoalCategory, Goal, GoalComment, BoardParticipant, Board
+from goals.models import GoalCategory, Goal, GoalComment
+from goals.models import BoardParticipant, Board
 from core.models import User
 
 
@@ -62,7 +63,6 @@ class GoalCreateSerializer(serializers.ModelSerializer):
             user=self.context["request"].user,
         ).exists():
             raise PermissionDenied
-
         return value
 
 
@@ -164,9 +164,6 @@ class BoardSerializer(serializers.ModelSerializer):
                 instance.save()
 
         return instance
-
-
-class BoardListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board

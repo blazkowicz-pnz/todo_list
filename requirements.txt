@@ -64,6 +64,7 @@ psycopg2-binary==2.9.3
 ptyprocess==0.7.0
 py==1.11.0
 pycparser==2.21
+pydantic==1.10.2
 PyJWT==2.4.0
 pylev==1.4.0
 pyOpenSSL==22.1.0
@@ -92,7 +93,7 @@ SQLAlchemy==1.4.32
 sqlparse==0.4.3
 tomli==2.0.1
 tomlkit==0.11.4
-typing-extensions==4.3.0
+typing_extensions==4.3.0
 tzdata==2022.4
 urllib3==1.26.11
 virtualenv==20.16.3

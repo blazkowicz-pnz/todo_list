@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 WORKDIR /app/todolist
 
@@ -13,11 +13,12 @@ RUN pip install -r requirements.txt
 COPY todo_list ./todo_list
 COPY core ./core
 COPY goals ./goals
+COPY bot ./bot
 COPY entrypoint.sh ./entrypoint.sh
 COPY manage.py ./manage.py
 
 USER api
 
-ENTRYPOINT ["bash", "entrypoint.sh"]
+#ENTRYPOINT ["bash", "entrypoint.sh"]
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
