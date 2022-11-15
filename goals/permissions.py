@@ -1,8 +1,5 @@
 from rest_framework import permissions
-
-
 from goals.models import BoardParticipant, Goal, GoalCategory, Board, GoalComment
-
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
