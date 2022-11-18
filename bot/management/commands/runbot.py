@@ -1,18 +1,13 @@
 import logging
 import os
-from datetime import datetime
 from enum import IntEnum, auto
-
 from django.core.management import BaseCommand
-
 from bot.models import TgUser
 from bot.tg.client import TgClient
 from bot.tg.models import Message
 from pydantic import BaseModel
-
 from todo_list import settings
 from bot.tg.fsm.memory_storage import MemoryStorage
-# from bot.fsm.memory_storage import MemoryStorage
 from goals.models import Goal, GoalCategory, BoardParticipant
 
 logger = logging.getLogger(__name__)
@@ -52,14 +47,16 @@ class Command(BaseCommand):
         )
 
     def handle_goals_list(self, msg: Message, tg_user: TgUser):
-        resp_goals: list[str] = [
-            f"#{goal.id} {goal.title}"
-            for goal in Goal.objects.filter(user_id=tg_user.user_id).order_by("created")
-        ]
-        if resp_goals:
-            self.tg_client.send_message(msg.chat.id, "\n".join(resp_goals))
+        goals = Goal.objects.filter(
+            category__board__participants__user_id=tg_user.user_id,
+            category__is_deleted=False
+        ).only("id", "title")
+        result = [f"#{goal.id} {goal.title}" for goal in goals]
+        if result:
+            self.tg_client.send_message(msg.chat.id, "\n".join(result))
         else:
-            self.tg_client.send_message(msg.chat.id, "[you have no goals]")
+            self.tg_client.send_message(msg.chat.id, "[you have no goals!]")
+
 
     def handle_goal_categories_list(self, msg: Message, tg_user: TgUser):
         resp_categories: list[str] = [
@@ -79,6 +76,7 @@ class Command(BaseCommand):
             cat_id = int(msg.text)
             if GoalCategory.objects.filter(
                     board__participants__user_id=tg_user.user_id,
+                    board__participants__role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
                     is_deleted=False,
                     id=cat_id
             ).exists():
@@ -98,7 +96,7 @@ class Command(BaseCommand):
                 title=goal.goal_title,
                 category_id=goal.cat_id,
                 user_id=tg_user.user_id,
-                due_date=datetime.now()
+
             )
             self.tg_client.send_message(msg.chat.id, "[New goal created]")
         else:

@@ -58,7 +58,6 @@ class BoardParticipant(BaseModel):
     )
 
 
-
 class GoalCategory(BaseModel):
 
     class Meta:
@@ -76,7 +75,8 @@ class GoalCategory(BaseModel):
     )
     is_deleted = models.BooleanField(
         verbose_name="Удалена",
-        default=False)
+        default=False
+    )
 
     board = models.ForeignKey(
         Board,
