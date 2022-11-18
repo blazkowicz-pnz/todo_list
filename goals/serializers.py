@@ -169,3 +169,8 @@ class BoardSerializer(serializers.ModelSerializer):
         model = Board
         fields = "__all__"
 
+
+class BoardListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Board
+        fields = "__all__"
