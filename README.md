@@ -4,7 +4,7 @@
 create, login, profile <b>USER</b> 
 
 ***
-* ####goals
+* #### goals
 
 Create, list view, detail view, update, delete:
 1. boards
