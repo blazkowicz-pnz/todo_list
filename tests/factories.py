@@ -50,7 +50,6 @@ class GoalFactory(factory.django.DjangoModelFactory):
     description = "description"
     user = factory.SubFactory(UserFactory)
     category = factory.SubFactory(GoalCategoryFactory)
-    # is_deleted = False
     status = 1
     priority = 2
     due_date = None

@@ -8,14 +8,6 @@ def test_user_login(client, user):
     user.set_password(password)
     user.save()
 
-    expected_response = {
-        "id": user.id,
-        "username": user.username,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email
-    }
-
     response = client.post(
         path="/core/login",
         data={
@@ -26,4 +18,10 @@ def test_user_login(client, user):
     )
 
     assert response.status_code == 200
-    assert response.data == expected_response
+    assert response.data == {
+        "id": user.id,
+        "username": user.username,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email
+    }
